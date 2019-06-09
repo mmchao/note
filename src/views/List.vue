@@ -5,7 +5,7 @@
       <div class="item" v-for="(item,index) in pageLists" :key="index" @click="toggleItem(index)" :class="{'active' : index === activeIndex}">
         <span class="delete" v-show="index==activeIndex" @click.stop="delItem(index)">&times;</span>
         <p class="title">{{item.title}}<p>
-        <p class="content">{{shortContent[index]}}</p>
+        <p class="content">{{item.content}}</p>
         <div class="footer">
           <div>{{item.time}}</div>
           <a v-if="index === activeIndex" @click.stop="goDetail(index)">查看详情>></a>
@@ -46,18 +46,6 @@ export default {
         return false
       }
     },
-    shortContent() {
-      var shortContent = []
-      this.pageLists.forEach(function(item) {
-        if (item.content.length <= 21) {
-          shortContent.push(item.content)
-        } else {
-          var cut = item.content.slice(0, 20) + '...'
-          shortContent.push(cut)
-        }
-      })
-      return shortContent
-    }
   },
   methods: {
     toggleItem (index) {
@@ -69,7 +57,7 @@ export default {
     },
     delItem (index) {
       store.commit('delItem', index)
-      localStorage["pageLists"]=JSON.stringify(store.state.lists) //存到本地
+      localStorage["pageLists"]=JSON.stringify(store.state.lists) // 存到本地
     },
     goDetail (index) {
       this.isDetail = true
@@ -118,6 +106,9 @@ export default {
     height 25px
     line-height 25px
     padding 5px
+    overflow: hidden;  //  超出部分隐藏
+    text-overflow: ellipsis; // 超出部分显示省略号
+    white-space: nowrap; // 强制不换行 换行就不会超出了 也不会显示省略号
   .footer
     height 20px
     display flex
